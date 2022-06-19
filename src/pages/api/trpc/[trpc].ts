@@ -22,7 +22,7 @@ export const appRouter = trpc.router()
         }
       })
   
-      return {slug, fullUrl: `https://localhost:3000/lnk/${slug}`}
+      return {slug}
     } catch (e) {
       console.error(e)
       throw e
