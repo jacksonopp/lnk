@@ -15,7 +15,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return
   }
 
-  const result = await prisma.shortLink.findFirst({
+  const data = await prisma.shortLink.findFirst({
     where: {
       slug: {
         equals: slug
@@ -24,7 +24,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   })
 
   // if no result, return a 404 slug not found
-  if (!result) {
+  if (!data) {
     res.status(404).json({
       error: "slug not found"
     });
@@ -33,7 +33,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   // return a hello world response
   res.status(200).json({
-    message: `Hello world from ${slug}`,
-    result
+    data
   })
 }

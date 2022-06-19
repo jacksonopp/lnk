@@ -1,9 +1,25 @@
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
+import { useSetUrl } from "../utils/trpc";
 
-const Home: NextPage = () => {
-  const [url, setUrl] = useState("");
+type Props = {host: string | null};
+
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+  return {props: {host: ctx.req.headers.host}}
+}
+
+const Home: NextPage<Props> = ({host}) => {
+  console.log(host)
+  const [urlString, setUrlString] = useState("");
+  const [newUrl, setNewUrl] = useState('');
+
+  
+  const {setUrl, loading, success} = useSetUrl();
+  const createUrl = async (url:string) => {
+    const result = await setUrl(url)
+    setNewUrl(result.slug)
+  }
 
   return (
     <div>
@@ -18,7 +34,7 @@ const Home: NextPage = () => {
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={(e) => {
             e.preventDefault();
-            console.log("submit", url);
+            createUrl(urlString)
           }}
         >
           <div className="mb-4">
@@ -33,8 +49,8 @@ const Home: NextPage = () => {
               id="url"
               type="text"
               placeholder="http://example.com"
-              value={url}
-              onChange={(e) => setUrl(e.currentTarget.value)}
+              value={urlString}
+              onChange={(e) => setUrlString(e.currentTarget.value)}
             />
           </div>
           <div className="mb-6">
@@ -46,6 +62,8 @@ const Home: NextPage = () => {
             </button>
           </div>
         </form>
+        {loading && <div>Loading...</div>}
+        {success && <p>{host}/lnk/{newUrl}</p>}
       </main>
     </div>
   );
