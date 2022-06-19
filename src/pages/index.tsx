@@ -6,6 +6,7 @@ import type {
 import Head from "next/head";
 import { useState } from "react";
 import { useSetUrl } from "../utils/trpc";
+import {add, formatDistanceToNow} from 'date-fns'
 
 type Props = { host: string | null };
 
@@ -16,11 +17,16 @@ export const getServerSideProps: Partial<GetServerSideProps<Props>> = async (
 };
 
 const Home: NextPage<Props> = ({ host }) => {
-  const [urlString, setUrlString] = useState("");
+  const [form, setForm] = useState({
+    url: "",
+    ttl: 60,
+  });
   const [newUrl, setNewUrl] = useState("");
 
   const { setUrl, loading, success, error } = useSetUrl();
-  const createUrl = async (url: string) => {
+  const createUrl = async (value: typeof form) => {
+    const { url, ttl } = value;
+    console.log(add(new Date(), { minutes: ttl }));
     const result = await setUrl(url);
     setNewUrl(result.slug);
   };
@@ -38,7 +44,7 @@ const Home: NextPage<Props> = ({ host }) => {
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col items-center content-center"
           onSubmit={(e) => {
             e.preventDefault();
-            createUrl(urlString);
+            createUrl(form);
           }}
         >
           <div className="mb-4">
@@ -53,8 +59,23 @@ const Home: NextPage<Props> = ({ host }) => {
               id="url"
               type="text"
               placeholder="http://example.com"
-              value={urlString}
-              onChange={(e) => setUrlString(e.currentTarget.value)}
+              value={form.url}
+              onChange={(e) => setForm({...form, url: e.currentTarget.value})}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="ttl"
+            >
+              Time to live (minutes)
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="ttl"
+              type="number"
+              value={form.ttl}
+              onChange={(e) => setForm({...form, ttl: parseInt(e.currentTarget.value)})}
             />
           </div>
           <div className="mb-6">
@@ -71,6 +92,7 @@ const Home: NextPage<Props> = ({ host }) => {
         <div className="flex flex-col gap-4 items-center">
           {success && (
             <>
+              <p>Link expires in {formatDistanceToNow(add(new Date(), {minutes: form.ttl}))}</p>
               <a href={`${host}/lnk/${newUrl}`} target="_blank">
                 {host}/lnk/{newUrl}
               </a>
