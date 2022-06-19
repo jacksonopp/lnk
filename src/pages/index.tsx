@@ -1,16 +1,15 @@
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { useSetUrl } from "../utils/trpc";
 
 type Props = {host: string | null};
 
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+export const getServerSideProps: Partial<GetServerSideProps<Props>> = async (ctx: GetServerSidePropsContext) => {
   return {props: {host: ctx.req.headers.host}}
 }
 
 const Home: NextPage<Props> = ({host}) => {
-  console.log(host)
   const [urlString, setUrlString] = useState("");
   const [newUrl, setNewUrl] = useState('');
 
