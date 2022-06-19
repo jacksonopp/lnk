@@ -1,24 +1,29 @@
-import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
 import Head from "next/head";
 import { useState } from "react";
 import { useSetUrl } from "../utils/trpc";
 
-type Props = {host: string | null};
+type Props = { host: string | null };
 
-export const getServerSideProps: Partial<GetServerSideProps<Props>> = async (ctx: GetServerSidePropsContext) => {
-  return {props: {host: ctx.req.headers.host}}
-}
+export const getServerSideProps: Partial<GetServerSideProps<Props>> = async (
+  ctx: GetServerSidePropsContext
+) => {
+  return { props: { host: ctx.req.headers.host } };
+};
 
-const Home: NextPage<Props> = ({host}) => {
+const Home: NextPage<Props> = ({ host }) => {
   const [urlString, setUrlString] = useState("");
-  const [newUrl, setNewUrl] = useState('');
+  const [newUrl, setNewUrl] = useState("");
 
-  
-  const {setUrl, loading, success, error} = useSetUrl();
-  const createUrl = async (url:string) => {
-    const result = await setUrl(url)
-    setNewUrl(result.slug)
-  }
+  const { setUrl, loading, success, error } = useSetUrl();
+  const createUrl = async (url: string) => {
+    const result = await setUrl(url);
+    setNewUrl(result.slug);
+  };
 
   return (
     <div>
@@ -30,15 +35,15 @@ const Home: NextPage<Props> = ({host}) => {
 
       <main className="flex flex-col items-center justify-center h-screen">
         <form
-          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+          className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col items-center content-center"
           onSubmit={(e) => {
             e.preventDefault();
-            createUrl(urlString)
+            createUrl(urlString);
           }}
         >
           <div className="mb-4">
             <label
-              className="block text-gray-700 text-sm font-bold mb-2"
+              className="block text-gray-700 font-bold mb-2"
               htmlFor="url"
             >
               Paste in your URL
@@ -63,7 +68,23 @@ const Home: NextPage<Props> = ({host}) => {
         </form>
         {loading && <div>Loading...</div>}
         {error && <div>Something went wrong...</div>}
-        {success && <p>{host}/lnk/{newUrl}</p>}
+        <div className="flex flex-col gap-4 items-center">
+          {success && (
+            <>
+              <a href={`${host}/lnk/${newUrl}`} target="_blank">
+                {host}/lnk/{newUrl}
+              </a>
+              <button
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={() => {
+                  navigator.clipboard.writeText(`${host}/lnk/${newUrl}`);
+                }}
+              >
+                Copy link to clipboard
+              </button>
+            </>
+          )}
+        </div>
       </main>
     </div>
   );
