@@ -6,7 +6,7 @@ const nextConfig = {
       {
         source: '/api/tprc/:path*',
         headers: [
-          {key: 'Access-Control-Allow-Origin', value: 'htts://lnk.jacksonoppenheim.com'},
+          {key: 'Access-Control-Allow-Origin', value: 'https://lnk.jacksonoppenheim.com'},
           {key: 'Access-Control-Allow-Methods', value: 'GET, POST, OPTIONS'},
         ]
       }
