@@ -32,7 +32,7 @@ const Home: NextPage = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="url"
               type="text"
-              placeholder="url"
+              placeholder="http://example.com"
               value={url}
               onChange={(e) => setUrl(e.currentTarget.value)}
             />
