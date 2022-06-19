@@ -26,8 +26,7 @@ const Home: NextPage<Props> = ({ host }) => {
   const { setUrl, loading, success, error } = useSetUrl();
   const createUrl = async (value: typeof form) => {
     const { url, ttl } = value;
-    console.log(add(new Date(), { minutes: ttl }));
-    const result = await setUrl(url);
+    const result = await setUrl(url, ttl);
     setNewUrl(result.slug);
   };
 
@@ -93,7 +92,7 @@ const Home: NextPage<Props> = ({ host }) => {
           {success && (
             <>
               <p>Link expires in {formatDistanceToNow(add(new Date(), {minutes: form.ttl}))}</p>
-              <a href={`${host}/lnk/${newUrl}`} target="_blank">
+              <a href={`${host}/lnk/${newUrl}`} target="_blank" rel="noreferrer">
                 {host}/lnk/{newUrl}
               </a>
               <button

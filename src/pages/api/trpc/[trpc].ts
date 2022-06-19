@@ -6,7 +6,8 @@ import prisma from "../../../../prisma/prisma";
 export const appRouter = trpc.router()
 .mutation("create-url", {
   input: z.object({
-    url: z.string()
+    url: z.string(),
+    expiry: z.number().nullish()
   }),
   resolve: async ({input}) => {
     const abc = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -18,6 +19,7 @@ export const appRouter = trpc.router()
       await prisma.shortLink.create({
         data: {
           url: input.url,
+          expiresIn: input.expiry,
           slug
         }
       })
