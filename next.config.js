@@ -3,7 +3,12 @@ const nextConfig = {
   reactStrictMode: true,
   async headers() {
     return [
-      {key: 'Access-Control-Allow-Origin', value: 'localhost:3000'},
+      {
+        source: '/api/:path',
+        headers: [
+          {key: 'Access-Control-Allow-Origin', value: 'localhost:3000'},
+        ]
+      }
     ]
   }
 }
