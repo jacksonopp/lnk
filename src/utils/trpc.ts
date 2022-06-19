@@ -15,5 +15,5 @@ export const useSetUrl = () => {
   }
 
 
-  return {setUrl, loading: mutation.isLoading, success: mutation.isSuccess}
+  return {setUrl, loading: mutation.isLoading, success: mutation.isSuccess, error: mutation.isError}
 }
