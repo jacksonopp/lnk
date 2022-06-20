@@ -6,12 +6,12 @@ import type {
 import Head from "next/head";
 import { useState } from "react";
 import { useSetUrl } from "../utils/trpc";
-import {add, formatDistanceToNow} from 'date-fns'
+import { formatDistance, parseISO } from 'date-fns'
 import { ShortLink } from "@prisma/client";
 
 type Props = { host: string | null };
 
-export const getServerSideProps: Partial<GetServerSideProps<Props>> = async (
+export const getServerSideProps = async (
   ctx: GetServerSidePropsContext
 ) => {
   return { props: { host: ctx.req.headers.host } };
@@ -92,7 +92,7 @@ const Home: NextPage<Props> = ({ host }) => {
         <div className="flex flex-col gap-4 items-center">
           {success && (
             <>
-              <p>Link expires in {formatDistanceToNow(add(new Date(), {seconds: newUrl.expiresIn}))}</p>
+              <p>Link expires in {formatDistance(new Date(), newUrl.expiresAt!)}</p>
               <a href={`${host}/lnk/${newUrl.slug}`} target="_blank" rel="noreferrer">
                 {host}/lnk/{newUrl.slug}
               </a>
