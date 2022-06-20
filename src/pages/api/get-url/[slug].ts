@@ -1,6 +1,7 @@
 // a nextjs request handler
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '../../../../prisma/prisma'
+import { millisecondsToSeconds } from "date-fns";
 
 // export a default async function for the nextjs request handler
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -19,6 +20,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     where: {
       slug: {
         equals: slug
+      },
+      expiresIn: {
+        gte: millisecondsToSeconds(Date.now())
       }
     }
   })

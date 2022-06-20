@@ -7,6 +7,7 @@ import Head from "next/head";
 import { useState } from "react";
 import { useSetUrl } from "../utils/trpc";
 import {add, formatDistanceToNow} from 'date-fns'
+import { ShortLink } from "@prisma/client";
 
 type Props = { host: string | null };
 
@@ -21,13 +22,13 @@ const Home: NextPage<Props> = ({ host }) => {
     url: "",
     ttl: 60,
   });
-  const [newUrl, setNewUrl] = useState("");
+  const [newUrl, setNewUrl] = useState<Partial<ShortLink>>({});
 
   const { setUrl, loading, success, error } = useSetUrl();
   const createUrl = async (value: typeof form) => {
     const { url, ttl } = value;
     const result = await setUrl(url, ttl);
-    setNewUrl(result.slug);
+    setNewUrl(result);
   };
 
   return (
@@ -91,14 +92,14 @@ const Home: NextPage<Props> = ({ host }) => {
         <div className="flex flex-col gap-4 items-center">
           {success && (
             <>
-              <p>Link expires in {formatDistanceToNow(add(new Date(), {minutes: form.ttl}))}</p>
+              <p>Link expires in {formatDistanceToNow(add(new Date(), {seconds: newUrl.expiresIn}))}</p>
               <a href={`${host}/lnk/${newUrl}`} target="_blank" rel="noreferrer">
-                {host}/lnk/{newUrl}
+                {host}/lnk/{newUrl.slug}
               </a>
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={() => {
-                  navigator.clipboard.writeText(`${host}/lnk/${newUrl}`);
+                  navigator.clipboard.writeText(`${host}/lnk/${newUrl.slug}`);
                 }}
               >
                 Copy link to clipboard

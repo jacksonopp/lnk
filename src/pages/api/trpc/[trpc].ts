@@ -7,7 +7,7 @@ export const appRouter = trpc.router()
 .mutation("create-url", {
   input: z.object({
     url: z.string(),
-    expiry: z.number().nullish()
+    expiry: z.number()
   }),
   resolve: async ({input}) => {
     const abc = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -16,7 +16,7 @@ export const appRouter = trpc.router()
     const slug = Array.from(Array(7).keys()).map(() => abc[Math.floor(Math.random() * abc.length)]).join('')
 
     try {
-      await prisma.shortLink.create({
+      const entry = await prisma.shortLink.create({
         data: {
           url: input.url,
           expiresIn: input.expiry,
@@ -24,7 +24,7 @@ export const appRouter = trpc.router()
         }
       })
   
-      return {slug}
+      return entry
     } catch (e) {
       console.error(e)
       throw e
