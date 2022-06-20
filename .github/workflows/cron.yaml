@@ -6,8 +6,8 @@ jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete old links
+      - name: Delete all the old links
         run: |
           curl --request POST \
-          --url 'http://localhost:300/api/cron' \
+          --url 'https://lnk.jacksonoppenheim.com/api/cron' \
           --header 'Authorization: Bearer ${{ secrets.API_SECRET_KEY }}'
