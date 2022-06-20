@@ -1,0 +1,13 @@
+name: delete-old-links
+on:
+  schedule:
+    - cron: '* * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old links
+        run: |
+          curl --request POST \
+          --url 'http://localhost:300/api/cron' \
+          --header 'Authorization: Bearer ${{ secrets.API_SECRET_KEY }}'
