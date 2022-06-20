@@ -16,7 +16,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           success: false
         })
       } else {        
-        const data = await prisma.shortLink.findMany({
+        const data = await prisma.shortLink.deleteMany({
           where: {
             expiresAt: {
               lte: formatISO(new Date())
@@ -40,6 +40,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Allow', 'POST')
     res.status(405).end('Method not allowed')
   }
-
-
 }

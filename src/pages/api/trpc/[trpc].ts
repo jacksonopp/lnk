@@ -2,6 +2,7 @@ import * as trpc from "@trpc/server";
 import * as trpcNext from "@trpc/server/adapters/next";
 import { z } from "zod";
 import prisma from "../../../../prisma/prisma";
+import {stringify} from "superjson";
 
 export const appRouter = trpc.router()
 .mutation("create-url", {
@@ -23,8 +24,11 @@ export const appRouter = trpc.router()
           slug
         }
       })
+
+      console.log('shortlink date and type', entry.expiresAt, typeof entry.expiresAt)
   
-      return entry
+      // return {...entry, expiresAt: entry.expiresAt.toString()}
+      return stringify(entry)
     } catch (e) {
       console.error(e)
       throw e

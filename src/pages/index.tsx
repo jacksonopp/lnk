@@ -6,7 +6,8 @@ import type {
 import Head from "next/head";
 import { useState } from "react";
 import { useSetUrl } from "../utils/trpc";
-import { formatDistance, parseISO } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
+import {parse} from 'superjson'
 import { ShortLink } from "@prisma/client";
 
 type Props = { host: string | null };
@@ -22,12 +23,19 @@ const Home: NextPage<Props> = ({ host }) => {
     url: "",
     ttl: 60,
   });
-  const [newUrl, setNewUrl] = useState<Partial<ShortLink>>({});
+  const [newUrl, setNewUrl] = useState<ShortLink>({
+    id: "",
+    url: "",
+    createdAt: new Date(),
+    expiresAt: new Date(),
+    slug: "",
+  });
 
   const { setUrl, loading, success, error } = useSetUrl();
   const createUrl = async (value: typeof form) => {
     const { url, ttl } = value;
-    const result = await setUrl(url, ttl);
+    const result = parse<ShortLink>(await setUrl(url, ttl));
+    console.log('client side date and type', result.expiresAt, typeof result.expiresAt)
     setNewUrl(result);
   };
 
@@ -92,7 +100,7 @@ const Home: NextPage<Props> = ({ host }) => {
         <div className="flex flex-col gap-4 items-center">
           {success && (
             <>
-              <p>Link expires in {formatDistance(new Date(), newUrl.expiresAt!)}</p>
+              <p>Link expires in {formatDistanceToNow(newUrl.expiresAt)}</p>
               <a href={`${host}/lnk/${newUrl.slug}`} target="_blank" rel="noreferrer">
                 {host}/lnk/{newUrl.slug}
               </a>
