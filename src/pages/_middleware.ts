@@ -7,19 +7,19 @@ export async function middleware(req: NextRequest) {
   // if the pathname starts with /api/get-url, then return early
   if (pathname.startsWith("/api/get-url")) {
     console.log('returning early');
-    return redirectToHome(req)
+    return redirectToUrl(req)
   }
 
   if (pathname.startsWith("/lnk")) {
     console.log('making an http request');
     const res = await (await fetch(`${origin}/api/get-url/${slug}`)).json();
     if (res.error) {
-      return redirectToHome(req)
+      return redirectToUrl(req, "/404");
     }
     return NextResponse.redirect(res.data.url);
   }
 }
 
-function redirectToHome(req: NextRequest) {
-  return NextResponse.redirect(req.nextUrl.origin);
+function redirectToUrl(req: NextRequest, path: string = "/") {
+  return NextResponse.redirect(`${req.nextUrl.origin}${path}`);
 }
