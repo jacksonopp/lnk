@@ -93,7 +93,7 @@ const Home: NextPage<Props> = ({ host }) => {
           {success && (
             <>
               <p>Link expires in {formatDistanceToNow(add(new Date(), {seconds: newUrl.expiresIn}))}</p>
-              <a href={`${host}/lnk/${newUrl}`} target="_blank" rel="noreferrer">
+              <a href={`${host}/lnk/${newUrl.slug}`} target="_blank" rel="noreferrer">
                 {host}/lnk/{newUrl.slug}
               </a>
               <button

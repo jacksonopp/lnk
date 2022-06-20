@@ -22,10 +22,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         equals: slug
       },
       expiresIn: {
-        gte: millisecondsToSeconds(Date.now())
+        lte: millisecondsToSeconds(Date.now())
       }
     }
   })
+
+  console.log("data from endpoint:", data);
 
   // if no result, return a 404 slug not found
   if (!data) {

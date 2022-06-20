@@ -13,6 +13,7 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/lnk")) {
     console.log('making an http request');
     const res = await (await fetch(`${origin}/api/get-url/${slug}`)).json();
+    console.log("data from middleware:", res);
     if (res.error) {
       return redirectToUrl(req, "/404");
     }
