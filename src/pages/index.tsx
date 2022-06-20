@@ -43,7 +43,7 @@ const Home: NextPage<Props> = ({ host }) => {
     <div>
       <Head>
         <title>lnk</title>
-        <meta name="description" content="Create a short link" />
+        <meta name="description" content="Create a shorter link" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
