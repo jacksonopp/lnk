@@ -13,8 +13,7 @@ datasource db {
 model ShortLink {
   id   String @id @default(cuid())
   createdAt DateTime @default(now())
-  
-  expiresIn Int @default(3600)
+  expiresAt DateTime @default(now())
   url  String
   slug String
 }

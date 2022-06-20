@@ -1,5 +1,5 @@
 import { createReactQueryHooks } from "@trpc/react";
-import { add, minutesToSeconds } from "date-fns";
+import { add, formatISO } from "date-fns";
 import { AppRouter } from "../pages/api/trpc/[trpc]"
 
 export const trpc = createReactQueryHooks<AppRouter>();
@@ -9,7 +9,7 @@ export const useSetUrl = () => {
 
   const setUrl = async (url: string, ttl: number) => {
     console.log('setting', url)
-    const expiry = minutesToSeconds(ttl)
+    const expiry = formatISO(add(new Date(), { minutes: ttl }))
     console.log(expiry)
     const result = await mutation.mutateAsync({url, expiry})
     console.log(result)

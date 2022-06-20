@@ -21,8 +21,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       slug: {
         equals: slug
       },
-      expiresIn: {
-        lte: millisecondsToSeconds(Date.now())
+      expiresAt: {
+        gte: new Date()
       }
     }
   })
